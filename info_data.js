@@ -13,7 +13,7 @@ let infoData = {
     },
     "fav": {
         "title": "ප්‍රියතම වචන",
-        "body": "\n            <div style=\"font-family: 'Noto Sans Sinhala', sans-serif; line-height: 1.8; color: #333; text-align: justify; padding: 0 15px; box-sizing: border-box; width: 100%; overflow-wrap: break-word;\">\n                මෙම පහසුකම ඊළඟ අප්ඩේට් එකෙන් බලාපොරොත්තු වන්න.\n            </div>\n        "
+        "body": "\n            <div style=\"font-family: 'Noto Sans Sinhala', sans-serif; line-height: 1.8; color: #333; text-align: justify; padding: 0 15px; box-sizing: border-box; width: 100%; overflow-wrap: break-word;\">\n                මෙම පහසුකම ඊළඟ අප්ඩේට් එකෙන් බලාපොරොත්තු වන්න. ඉක්මනින්ම සාදන ලැබේ.\n            </div>\n        "
     },
     "appendix": {
         "title": "උපග්‍රන්ථය",
