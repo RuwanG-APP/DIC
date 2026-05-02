@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<script src="info_data.js"></script>
+<script>
+    if(localStorage.getItem("isUnlocked") !== "true") {
+        window.location.href = "index.html";
+    }
+</script>    
+
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>දේශීය වෛද්‍ය ශබ්දකෝෂය - Ruwan Gamaralalage</title>
+    
+    <link rel="manifest" href="manifest.json"> 
+    
+<script src="data.js" defer></script>
+<script src="data_79_88.js" defer></script>
+<script src="data_89_98.js" defer></script>
+<script src="data_99_108.js" defer></script>
+<script src="data_109_115.js" defer></script>
+<script src="data_116_124.js" defer></script>
+<script src="data_125_134.js" defer></script>
+<script src="data_135_143.js" defer></script>
+<script src="data_144_152.js" defer></script>
+<script src="data_153_161.js" defer></script>
+<script src="data_162_171.js" defer></script>
+<script src="data_172_177.js" defer></script> 
+<script src="data_178_185.js" defer></script>
+<script src="data_186_193.js" defer></script>
+<script src="data_194_202.js" defer></script>
+<script src="data_203_210.js" defer></script>
+<script src="data_211_220.js" defer></script>
+<script src="data_221_230.js" defer></script>
+<script src="data_231_240.js" defer></script>
+<script src="data_241_250.js" defer></script>
+<script src="data_251_259.js" defer></script>
+<script src="data_260_269.js" defer></script>
+<script src="data_270_278.js" defer></script>
+<script src="data_279_287.js" defer></script>
+<script src="data_288_296.js" defer></script>
+<script src="data_297_305.js" defer></script>
+<script src="data_306_314.js" defer></script>
+<script src="data_315_324.js" defer></script>
+<script src="data_325_334.js" defer></script>
+<script src="data_335_344.js" defer></script>
+<script src="data_345_354.js" defer></script>
+<script src="data_355_364.js" defer></script>
+<script src="data_365_374.js" defer></script>
+<script src="data_375_384.js" defer></script>
+<script src="data_385_394.js" defer></script>
+<script src="data_395_404.js" defer></script>
+<script src="data_405_417.js" defer></script>
+<script src="data_418_427.js" defer></script>
+<script src="data_428_438.js" defer></script>
+<script src="data_439_449.js" defer></script>
+<script src="data_450_458.js" defer></script>
+<script src="data_459_470.js" defer></script>
+<script src="data_471_481.js" defer></script>
+<script src="data_482_492.js" defer></script>
+<script src="data_493_506.js" defer></script>
+<script src="data_507_513.js" defer></script>
+<script src="data_514_524.js" defer></script>
+    <style>
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode div {
+    color: var(--text-dark) !important;
+}        
+
+:root {
+            --primary-green: #1b4d3e; --accent-green: #2d5a27; --bg-cream: #fdfbf7;
+            --text-dark: #2c3e50; --card-white: #ffffff; --content-font-size: 18px; 
+        }
+        body.dark-mode { --bg-cream: #121212; --card-white: #1e1e1e; --text-dark: #e0e0e0; --primary-green: #81c784; }
+        
+
+body {
+            font-family: 'Segoe UI', 'Noto Sans Sinhala', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-cream); margin: 0; padding: 15px; color: var(--text-dark);
+            -webkit-user-select: none; user-select: none; transition: background 0.3s ease;
+        }
+        .container {
+            max-width: 850px; margin: 10px auto; background: var(--card-white);
+            padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid #e0d7c6;
+        }
+        header { text-align: center; margin-bottom: 20px; }
+        header img { max-width: 100%; height: auto; border-radius: 10px; }
+        .nav-menu { display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+        .nav-item { color: var(--primary-green); font-weight: bold; font-size: 14px; cursor: pointer; transition: 0.3s; }
+        .exit-item { color: #e74c3c; font-weight: bold; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        #wordCountDisplay { color: var(--accent-green); font-weight: bold; font-size: 15px; }
+        .font-controls button { background: var(--primary-green); color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-left: 5px; }
+        .search-box { width: 100%; padding: 18px; border: 2px solid #dcdde1; border-radius: 15px; font-size: 18px; box-sizing: border-box; outline: none; background-color: #f9f9f9; }
+        .category-filter { display: flex; justify-content: center; gap: 8px; margin-top: 15px; margin-bottom: 10px; flex-wrap: wrap; }
+        .cat-btn { background: var(--card-white); border: 2px solid var(--primary-green); color: var(--primary-green); padding: 6px 12px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .cat-btn.active { background: var(--primary-green); color: white; }
+        .alphabet-index { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin: 15px 0; padding: 10px; background: rgba(27, 77, 62, 0.05); border-radius: 12px; }
+        .letter-btn { background: var(--card-white); border: 1px solid #ddd; border-radius: 5px; padding: 5px 8px; font-size: 13px; cursor: pointer; color: var(--primary-green); font-weight: bold; }
+        #results { max-width: 850px; margin: 25px auto; }
+        .word-card { background: var(--card-white); padding: 25px; border-radius: 18px; margin-bottom: 20px; border-left: 6px solid var(--primary-green); box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .word-title { font-weight: bold; color: var(--primary-green); font-size: 24px; display: block; margin-bottom: 10px; }
+        .meaning { font-size: var(--content-font-size); line-height: 1.9; color: #34495e; text-align: justify; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: var(--bg-cream); margin: 5% auto; padding: 30px; border-radius: 20px; width: 90%; max-width: 800px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .close-btn { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .edit-btn { background: #f39c12; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 13px; transition: 0.3s; }
+        .edit-btn:hover { background: #e67e22; }
+        
+        .word-content-wrapper { display: flex; flex-direction: column; }
+        .word-image { width: 100%; max-width: 300px; border-radius: 10px; margin-bottom: 15px; align-self: center; object-fit: cover; border: 2px solid var(--primary-green); }
+        @media (min-width: 600px) {
+            .word-content-wrapper { flex-direction: row-reverse; align-items: flex-start; }
+            .word-image { width: 250px; margin-bottom: 0; margin-left: 20px; align-self: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header><img src="head.jpg" alt="Header"></header>
+    <div class="nav-menu">
+        <span class="nav-item" onclick="showModal('fav')">මගේ ප්‍රියතම</span>
+        <span class="nav-item" onclick="showModal('history')">දේශීය වෙදකමේ ඉතිහාසය</span>
+        <span class="nav-item" onclick="showModal('author')">කර්තෘ සටහන</span>
+        <span class="nav-item" onclick="showModal('compiler')">සම්පාදකගේ සටහන</span>
+        <span class="nav-item" onclick="showModal('appendix')">උපග්‍රන්ථය</span>
+        <span class="nav-item exit-item" onclick="exitApp()">පිටවීම</span>
+    </div>
+
+    <div class="top-bar">
+        <div class="font-controls">
+            <button onclick="changeFontSize(2)">A +</button>
+            <button onclick="changeFontSize(-2)">A -</button>
+            <button onclick="toggleDarkMode()">🌙</button>
+        </div>
+        <p id="wordCountDisplay" ondblclick="promptAdminLogin()" style="cursor: default;" title="Double click to Admin Login">මුළු වචන සංඛ්‍යාව: <span id="wordCount">0</span></p>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="මෙහි සොයන්න..." onkeyup="initSearch()" class="search-box">
+    
+    <div class="category-filter">
+        <button class="cat-btn active" onclick="filterByCategory('all', this)">සියල්ල</button>
+        <button class="cat-btn" onclick="filterByCategory('plant', this)">ඖෂධ පැළෑටි</button>
+        <button class="cat-btn" onclick="filterByCategory('symptom', this)">රෝග ලක්ෂණ</button>
+        <button class="cat-btn" onclick="filterByCategory('treatment', this)">ප්‍රතිකාර ක්‍රම</button>
+    </div>
+
+    <div class="alphabet-index" id="alphabetIndex"></div>
+</div>
+
+<div id="results"></div>
+
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid var(--primary-green); padding-bottom: 10px;">
+            <h2 id="modalTitle" style="color: var(--primary-green); margin:0;"></h2>
+            <button id="infoEditBtn" class="edit-btn" style="display:none;" onclick="toggleInfoEdit()">✏️ Edit</button>
+        </div>
+        
+        <div id="modalBody" style="margin-top: 15px; line-height: 1.8; text-align: justify;"></div>
+        
+        <div id="infoEditSection" style="display:none; margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">මාතෘකාව (Title):</label>
+            <input type="text" id="infoEditTitle" class="search-box" style="margin-top: 5px; padding: 10px;">
+            
+            <label style="font-weight: bold; color: var(--primary-green); margin-top: 15px; display:block;">විස්තරය (HTML Body):</label>
+            <textarea id="infoEditBody" class="search-box" style="margin-top: 5px; padding: 10px; height: 300px; resize: vertical; font-family: monospace; direction: ltr; text-align: left;"></textarea>
+            
+            <button onclick="saveInfoEdit()" style="background: var(--primary-green); color: white; border: none; padding: 12px 20px; border-radius: 8px; width: 100%; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer;">Save Changes</button>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <span class="close-btn" onclick="closeEditModal()">&times;</span>
+        <h2 style="color: var(--primary-green); border-bottom: 2px solid var(--primary-green); padding-bottom: 10px;">වචනය සංස්කරණය</h2>
+        
+        <input type="hidden" id="editOriginalWord">
+        
+        <div style="margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">වචනය:</label>
+            <input type="text" id="editWordInput" class="search-box" style="margin-top: 5px; padding: 10px;">
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">තේරුම:</label>
+            <textarea id="editMeaningInput" class="search-box" style="margin-top: 5px; padding: 10px; height: 100px; resize: vertical; font-family: inherit;"></textarea>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">කාණ්ඩය:</label>
+            <select id="editCategoryInput" class="search-box" style="margin-top: 5px; padding: 10px;">
+                <option value="plant">ඖෂධ පැළෑටි (plant)</option>
+                <option value="symptom">රෝග ලක්ෂණ (symptom)</option>
+                <option value="treatment">ප්‍රතිකාර ක්‍රම (treatment)</option>
+                <option value="mineral">ඛණිජ (mineral)</option>
+                <option value="animal">සත්ව (animal)</option>
+                <option value="food">ආහාර (food)</option>
+                <option value="anatomy">ශරීර අංග (anatomy)</option>
+                <option value="other">වෙනත් (other)</option>
+            </select>
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">විද්‍යාත්මක නාමය:</label>
+            <input type="text" id="editScientificInput" class="search-box" style="margin-top: 5px; padding: 10px;">
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">පින්තූරය (Image):</label>
+            <input type="file" id="editImageInput" accept="image/*" class="search-box" style="margin-top: 5px; padding: 10px; background: white;">
+            <div id="imagePreview" style="margin-top: 10px; max-width: 200px;"></div>
+        </div>
+        
+        <button onclick="saveEditedWord()" style="background: var(--primary-green); color: white; border: none; padding: 12px 20px; border-radius: 8px; width: 100%; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer;">Save Changes</button>
+    </div>
+</div>
+
+<script>
+    let masterData = [];
+    let currentCategory = 'all';
+
+window.addEventListener('load', function() {
+        const data1 = (typeof dictionaryData !== 'undefined') ? dictionaryData : [];
+        const data2 = (typeof data_extra_79_88 !== 'undefined') ? data_extra_79_88 : [];
+        const data3 = (typeof data_extra_89_98 !== 'undefined') ? data_extra_89_98 : []; 
+        const data4 = (typeof data_extra_99_108 !== 'undefined') ? data_extra_99_108 : []; 
+        const data5 = (typeof data_extra_109_115 !== 'undefined') ? data_extra_109_115 : []; 
+        const data6 = (typeof data_extra_116_124 !== 'undefined') ? data_extra_116_124 : []; 
+        const data7 = (typeof data_extra_125_134 !== 'undefined') ? data_extra_125_134 : []; 
+        const data8 = (typeof data_extra_135_143 !== 'undefined') ? data_extra_135_143 : []; 
+        const data9 = (typeof data_extra_144_152 !== 'undefined') ? data_extra_144_152 : [];
+        const data10 = (typeof data_extra_153_161 !== 'undefined') ? data_extra_153_161 : [];
+        const data11 = (typeof data_extra_162_171 !== 'undefined') ? data_extra_162_171 : [];
+        const data12 = (typeof data_extra_172_177 !== 'undefined') ? data_extra_172_177 : [];
+        const data13 = (typeof data_extra_178_185 !== 'undefined') ? data_extra_178_185 : []; // දැන් මේක ඇතුළේ 184 ත් තියෙනවා
+        const data14 = (typeof data_extra_186_193 !== 'undefined') ? data_extra_186_193 : []; // අන්තිම ෆයිල් එක 14 වුණා
+        const data15 = (typeof data_extra_194_202 !== 'undefined') ? data_extra_194_202 : []; // පිටු අංක 194 සිට 202
+        const data16 = (typeof data_extra_203_210 !== 'undefined') ? data_extra_203_210 : []; // පිටු අංක 203 සිට 210    
+        const data17 = (typeof data_extra_211_220 !== 'undefined') ? data_extra_211_220 : []; // පිටු අංක 211 සිට 220       
+        const data18 = (typeof data_extra_221_230 !== 'undefined') ? data_extra_221_230 : []; // පිටු අංක 221 සිට 230       
+        const data19 = (typeof data_extra_231_240 !== 'undefined') ? data_extra_231_240 : []; // පිටු අංක 231 සිට 240       
+        const data20 = (typeof data_extra_241_250 !== 'undefined') ? data_extra_241_250 : []; // පිටු අංක 241 සිට 250 
+        const data21 = (typeof data_extra_251_259 !== 'undefined') ? data_extra_251_259 : []; // පිටු අංක 251 සිට 259     
+        const data22 = (typeof data_extra_260_269 !== 'undefined') ? data_extra_260_269 : []; // පිටු අංක 260 සිට 269     
+        const data23 = (typeof data_extra_270_278 !== 'undefined') ? data_extra_270_278 : []; // පිටු අංක 270 සිට 278  
+        const data24 = (typeof data_extra_279_287 !== 'undefined') ? data_extra_279_287 : []; // පිටු අංක 279 සිට 287
+        const data25 = (typeof data_extra_288_296 !== 'undefined') ? data_extra_288_296 : []; // පිටු අංක 288 සිට 296 
+        const data26 = (typeof data_extra_297_305 !== 'undefined') ? data_extra_297_305 : []; // පිටු අංක 297 සිට 305 
+        const data27 = (typeof data_extra_306_314 !== 'undefined') ? data_extra_306_314 : []; // පිටු අංක 306 සිට 314 
+        const data28 = (typeof data_extra_315_324 !== 'undefined') ? data_extra_315_324 : []; // පිටු අංක 315 සිට 324 
+        const data29 = (typeof data_extra_325_334 !== 'undefined') ? data_extra_325_334 : []; // පිටු අංක 325 සිට 334 
+        const data30 = (typeof data_extra_335_344 !== 'undefined') ? data_extra_335_344 : []; // පිටු අංක 335 සිට 344 
+        const data31 = (typeof data_extra_345_354 !== 'undefined') ? data_extra_345_354 : []; // පිටු අංක 345 සිට 355 
+	const data32 = (typeof data_extra_355_364 !== 'undefined') ? data_extra_355_364    : []; // පිටු අංක 355 සිට 364
+	const data33 = (typeof data_extra_365_374 !== 'undefined') ? data_extra_365_374    : []; // පිටු අංක 365 සිට 374
+	const data34 = (typeof data_extra_375_384 !== 'undefined') ? data_extra_375_384    : []; // පිටු අංක 375 සිට 384
+	const data35 = (typeof data_extra_385_394 !== 'undefined') ? data_extra_385_394    : []; // පිටු අංක 385 සිට 394
+	const data36 = (typeof data_extra_395_404 !== 'undefined') ? data_extra_395_404    : []; // පිටු අංක 395 සිට 404
+	const data37 = (typeof data_extra_405_417 !== 'undefined') ? data_extra_405_417    : []; // පිටු අංක 405 සිට 417
+	const data38 = (typeof data_extra_418_427 !== 'undefined') ? data_extra_418_427    : []; // පිටු අංක 418 සිට 427
+	const data39 = (typeof data_extra_428_438 !== 'undefined') ? data_extra_428_438    : []; // පිටු අංක 428 සිට 438
+        const data40 = (typeof data_extra_439_449 !== 'undefined') ? data_extra_439_449 :[]; // පිටු අංක 439 සිට 449
+	const data41 = (typeof data_extra_450_458 !== 'undefined') ? data_extra_450_458 :[]; // පිටු අංක 450 සිට 458
+	const data42 = (typeof data_extra_459_470 !== 'undefined') ? data_extra_459_470 :[]; // පිටු අංක 459 සිට 470
+	const data43 = (typeof data_extra_471_481 !== 'undefined') ? data_extra_471_481 :[]; // පිටු අංක 471 සිට 481
+        const data44 = (typeof data_extra_482_492 !== 'undefined') ? data_extra_482_492 :[]; // පිටු අංක 482 සිට 492
+        const data45 = (typeof data_extra_493_506 !== 'undefined') ? data_extra_493_506 :[]; // පිටු අංක 493 සිට 506
+        const data46 = (typeof data_extra_507_513 !== 'undefined') ? data_extra_507_513 :[]; // පිටු අංක 507 සිට 513
+        const data47 = (typeof data_extra_514_524 !== 'undefined') ? data_extra_514_524 :[]; // පිටු අංක 514 සිට 524
+
+masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...data7, ...data8, ...data9, ...data10, ...data11, ...data12, ...data13, ...data14, ...data15, ...data16, ...data17, ...data18, ...data19, ...data20, ...data21, ...data22, ...data23, ...data24, ...data25, ...data26, ...data27, ...data28, ...data29, ...data30, ...data31, ...data32, ...data33, ...data34, ...data35, ...data36, ...data37, ...data38, ...data39, ...data40, ...data41, ...data42, ...data43, ...data44, ...data45, ...data46, ...data47];
+        
+        if (masterData.length > 0) {
+            document.getElementById('wordCount').innerText = masterData.length.toLocaleString('si-LK');
+            createAlphabetIndex();
+        }
+    });
+
+
+
+
+    const sinhalaLetters = ["අ", "ආ", "ඇ", "ඈ", "ඉ", "ඊ", "උ", "ඌ", "එ", "ඒ", "ඔ", "ඕ", "ක", "ග", "ච", "ජ", "ට", "ඩ", "ණ", "ත", "ද", "න", "ප", "බ", "ම", "ය", "ර", "ල", "ව", "ස", "හ"];
+    function createAlphabetIndex() {
+        const container = document.getElementById('alphabetIndex');
+        container.innerHTML = "";
+        sinhalaLetters.forEach(letter => {
+            let btn = document.createElement('button');
+            btn.className = 'letter-btn'; btn.innerText = letter;
+            btn.onclick = () => { document.getElementById('searchInput').value = letter; initSearch(true); };
+            container.appendChild(btn);
+        });
+    }
+
+    function initSearch(isIndexSearch = false) {
+        let input = document.getElementById('searchInput').value.trim().toLowerCase();
+        let resultDiv = document.getElementById('results');
+        if (input.length < 1) { resultDiv.innerHTML = ""; return; }
+
+        let filtered = masterData.filter(item => {
+            const categoryMatch = (currentCategory === 'all' || item.category === currentCategory);
+            let wordMatch = item.word.toLowerCase().startsWith(input);
+            return categoryMatch && wordMatch;
+        });
+
+        resultDiv.innerHTML = "";
+        filtered.slice(0, 50).forEach(item => {
+            let index = masterData.indexOf(item);
+            let editBtnHtml = isAdmin ? `<button class="edit-btn" onclick="openEditModal(${index})">✏️ Edit</button>` : '';
+            
+            let scientificHtml = item.scientific ? `<div style="font-style: italic; font-weight: bold; color: #7f8c8d; margin-bottom: 8px;">(${item.scientific})</div>` : '';
+            let imageHtml = item.image ? `<img src="${item.image}" alt="${item.word}" class="word-image">` : '';
+            
+            resultDiv.innerHTML += `<div class="word-card">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <span class="word-title" style="margin-bottom:0;">${item.word}</span>
+                    ${editBtnHtml}
+                </div>
+                ${scientificHtml}
+                <div class="word-content-wrapper" style="margin-top:10px;">
+                    ${imageHtml}
+                    <div class="meaning" style="flex: 1;">${item.meaning}</div>
+                </div>
+            </div>`;
+        });
+    }
+
+    function filterByCategory(cat, btn) {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active'); currentCategory = cat;
+        initSearch();
+    }
+
+    function exitApp() { if (confirm("ඔබට මෙම ශබ්දකෝෂයෙන් පිටවීමට අවශ්‍යද?")) { window.close(); window.location.href = "about:blank"; } }
+    function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
+    function changeFontSize(delta) { 
+        const root = document.querySelector(':root');
+        const cur = parseFloat(getComputedStyle(root).getPropertyValue('--content-font-size'));
+        root.style.setProperty('--content-font-size', (cur + delta) + 'px');
+    }
+
+    // --- Admin Edit Logic ---
+    let isAdmin = false;
+
+    function promptAdminLogin() {
+        if (isAdmin) {
+            alert("ඔබ දැනටමත් Admin ලෙස ලොග් වී ඇත.");
+            return;
+        }
+        let pass = prompt("Admin Password එක ඇතුළත් කරන්න:");
+        if (pass === "Weda2026") {
+            isAdmin = true;
+            alert("Admin ලොගින් සාර්ථකයි! දැන් ඔබට වචන Edit කළ හැක.");
+            initSearch(); 
+        } else if (pass !== null && pass !== "") {
+            alert("පාස්වර්ඩ් එක වැරදියි!");
+        }
+    }
+
+    let currentEditItemIndex = -1;
+
+    function openEditModal(index) {
+        currentEditItemIndex = index;
+        let item = masterData[index];
+        
+        document.getElementById('editOriginalWord').value = item.word;
+        document.getElementById('editWordInput').value = item.word;
+        document.getElementById('editMeaningInput').value = item.meaning;
+        document.getElementById('editScientificInput').value = item.scientific || "";
+        document.getElementById('editImageInput').value = "";
+        
+        let preview = document.getElementById('imagePreview');
+        if (item.image) {
+            preview.innerHTML = `<img src="${item.image}" style="max-width: 100%; border-radius: 5px;">`;
+        } else {
+            preview.innerHTML = "";
+        }
+        
+        let catSelect = document.getElementById('editCategoryInput');
+        let found = Array.from(catSelect.options).some(opt => {
+            if (opt.value === item.category) { opt.selected = true; return true; }
+            return false;
+        });
+        if (!found && item.category) {
+            catSelect.add(new Option(item.category, item.category, true, true));
+        }
+        
+        document.getElementById('editModal').style.display = "block";
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = "none";
+    }
+
+    function saveEditedWord() {
+        let originalWord = document.getElementById('editOriginalWord').value;
+        let newWord = document.getElementById('editWordInput').value.trim();
+        let newMeaning = document.getElementById('editMeaningInput').value.trim();
+        let newCategory = document.getElementById('editCategoryInput').value;
+        let newScientific = document.getElementById('editScientificInput').value.trim();
+        let imageInput = document.getElementById('editImageInput');
+        
+        if (newWord === "" || newMeaning === "") {
+            alert("කරුණාකර වචනය සහ තේරුම සම්පූර්ණ කරන්න.");
+            return;
+        }
+        
+        if (window.location.protocol !== 'http:') {
+            alert("Admin Edit පහසුකම භාවිතා කිරීමට කරුණාකර server.js ධාවනය කර http://localhost:3000 හරහා ඇප් එක විවෘත කරන්න.");
+            return;
+        }
+        
+        let btn = document.querySelector('#editModal button');
+        btn.innerText = "Saving...";
+        btn.disabled = true;
+        
+        if (imageInput.files.length > 0) {
+            let file = imageInput.files[0];
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let base64 = e.target.result;
+                let extension = file.name.split('.').pop();
+                let cleanOriginal = originalWord.replace(/[^a-zA-Z0-9]/g, '');
+                let filename = "plant_" + Date.now() + "." + extension;
+                
+                fetch('/upload-image', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ filename: filename, base64: base64 })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        sendUpdateRequest(originalWord, newWord, newMeaning, newCategory, newScientific, data.url, btn);
+                    } else {
+                        alert("Image Upload Error: " + data.message);
+                        btn.innerText = "Save Changes"; btn.disabled = false;
+                    }
+                }).catch(err => {
+                    console.error(err);
+                    alert("Image Upload Failed");
+                    btn.innerText = "Save Changes"; btn.disabled = false;
+                });
+            };
+            reader.readAsDataURL(file);
+        } else {
+            let existingImage = (currentEditItemIndex !== -1 && masterData[currentEditItemIndex].image) ? masterData[currentEditItemIndex].image : "";
+            sendUpdateRequest(originalWord, newWord, newMeaning, newCategory, newScientific, existingImage, btn);
+        }
+    }
+
+    function sendUpdateRequest(orig, word, mean, cat, sci, img, btn) {
+        fetch('/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ originalWord: orig, newWord: word, newMeaning: mean, newCategory: cat, newScientific: sci, newImage: img })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.innerText = "Save Changes";
+            btn.disabled = false;
+            if (data.success) {
+                alert(data.message);
+                if (currentEditItemIndex !== -1) {
+                    masterData[currentEditItemIndex].word = word;
+                    masterData[currentEditItemIndex].meaning = mean;
+                    masterData[currentEditItemIndex].category = cat;
+                    masterData[currentEditItemIndex].scientific = sci;
+                    if (img) masterData[currentEditItemIndex].image = img;
+                }
+                closeEditModal();
+                initSearch();
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => {
+            btn.innerText = "Save Changes";
+            btn.disabled = false;
+            alert("සේවර් එකට සම්බන්ධ වීමට නොහැක. server.js run වෙනවද කියලා බලන්න.");
+            console.error('Error:', error);
+        });
+    }
+    // --- End Admin Edit Logic ---
+
+    function showModal(key) { 
+        currentInfoKey = key;
+        document.getElementById('modalTitle').innerText = infoData[key].title; 
+        document.getElementById('modalBody').innerHTML = infoData[key].body; 
+        
+        document.getElementById('modalBody').style.display = "block";
+        document.getElementById('infoEditSection').style.display = "none";
+        
+        if (isAdmin) {
+            document.getElementById('infoEditBtn').style.display = "block";
+        } else {
+            document.getElementById('infoEditBtn').style.display = "none";
+        }
+        
+        document.getElementById('infoModal').style.display = "block"; 
+    }
+
+    function toggleInfoEdit() {
+        let bodyDiv = document.getElementById('modalBody');
+        let editSec = document.getElementById('infoEditSection');
+        
+        if (editSec.style.display === "none") {
+            document.getElementById('infoEditTitle').value = infoData[currentInfoKey].title;
+            document.getElementById('infoEditBody').value = infoData[currentInfoKey].body;
+            bodyDiv.style.display = "none";
+            editSec.style.display = "block";
+        } else {
+            bodyDiv.style.display = "block";
+            editSec.style.display = "none";
+        }
+    }
+
+    function saveInfoEdit() {
+        let newTitle = document.getElementById('infoEditTitle').value.trim();
+        let newBody = document.getElementById('infoEditBody').value;
+        
+        if (newTitle === "") {
+            alert("කරුණාකර මාතෘකාව සම්පූර්ණ කරන්න.");
+            return;
+        }
+        
+        let btn = document.querySelector('#infoEditSection button');
+        btn.innerText = "Saving...";
+        btn.disabled = true;
+        
+        fetch('/update-info', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: currentInfoKey, newTitle: newTitle, newBody: newBody })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.innerText = "Save Changes";
+            btn.disabled = false;
+            if (data.success) {
+                alert(data.message);
+                infoData[currentInfoKey].title = newTitle;
+                infoData[currentInfoKey].body = newBody;
+                toggleInfoEdit();
+                showModal(currentInfoKey);
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch(error => {
+            btn.innerText = "Save Changes";
+            btn.disabled = false;
+            alert("සේවර් එකට සම්බන්ධ වීමට නොහැක. server.js run වෙනවද කියලා බලන්න.");
+            console.error('Error:', error);
+        });
+    }
+
+    function closeModal() { document.getElementById('infoModal').style.display = "none"; }
+</script>
+</body>
+</html>
