@@ -139,7 +139,10 @@ body {
             <button onclick="changeFontSize(-2)">A -</button>
             <button onclick="toggleDarkMode()">🌙</button>
         </div>
-        <p id="wordCountDisplay" ondblclick="promptAdminLogin()" style="cursor: default;" title="Double click to Admin Login">මුළු වචන සංඛ්‍යාව: <span id="wordCount">0</span></p>
+        <div style="display:flex; align-items:center;">
+            <p id="wordCountDisplay" ondblclick="promptAdminLogin()" style="cursor: default; margin:0;" title="Double click to Admin Login">මුළු වචන සංඛ්‍යාව: <span id="wordCount">0</span></p>
+            <button id="adminCodeBtn" style="display:none; background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 15px; font-size: 14px;" onclick="openCodeModal()">🔐 කේත කළමනාකරණය</button>
+        </div>
     </div>
 
     <div style="display: flex; gap: 10px; margin-bottom: 20px;">
@@ -430,6 +433,7 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
         let pass = prompt("Admin Password එක ඇතුළත් කරන්න:");
         if (pass === "Weda2026") {
             isAdmin = true;
+            document.getElementById('adminCodeBtn').style.display = 'inline-block';
             alert("Admin ලොගින් සාර්ථකයි! දැන් ඔබට වචන Edit කළ හැක.");
             initSearch(); 
         } else if (pass !== null && pass !== "") {
@@ -737,6 +741,84 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
         </div>
     </div>
 </div>
+
+<div id="codeModal" class="modal" style="display:none; background-color: rgba(0,0,0,0.8); z-index: 10000;">
+    <div class="modal-content" style="max-width: 600px; text-align: left; padding: 20px;">
+        <span class="close-btn" onclick="document.getElementById('codeModal').style.display='none'">&times;</span>
+        <h2 style="color: #2e7d32; border-bottom: 2px solid #2e7d32; padding-bottom: 10px; margin-top: 0;">🔐 කේත කළමනාකරණය</h2>
+        
+        <button onclick="generateCode()" style="background: #2980b9; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 16px;">+ අලුත් කේතයක් සාදන්න</button>
+        
+        <div id="codeList" style="max-height: 400px; overflow-y: auto; background: #f9f9f9; border: 1px solid #ddd; padding: 10px; border-radius: 8px;">
+            <p style="text-align: center; color: #777;">Loading codes...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function openCodeModal() {
+        document.getElementById('codeModal').style.display = "block";
+        fetchCodes();
+    }
+
+    async function fetchCodes() {
+        const codeListDiv = document.getElementById('codeList');
+        codeListDiv.innerHTML = "<p style='text-align: center; color: #777;'>Loading codes...</p>";
+        
+        try {
+            const snapshot = await db.collection("activation_codes").orderBy("code").get();
+            if (snapshot.empty) {
+                codeListDiv.innerHTML = "<p style='text-align: center; color: #777;'>කිසිදු කේතයක් නොමැත.</p>";
+                return;
+            }
+            
+            let html = "";
+            snapshot.forEach(doc => {
+                let data = doc.data();
+                let statusColor = data.used ? "#e74c3c" : "#27ae60";
+                let statusText = data.used ? "Used" : "Available";
+                
+                html += `<div style="display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; background: white; margin-bottom: 5px; border-radius: 5px;">
+                            <strong style="font-size: 16px;">${data.code}</strong>
+                            <span style="color: white; background: ${statusColor}; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">${statusText}</span>
+                         </div>`;
+            });
+            codeListDiv.innerHTML = html;
+        } catch (error) {
+            console.error(error);
+            codeListDiv.innerHTML = "<p style='color: red; text-align: center;'>දෝෂයක් මතු විය.</p>";
+        }
+    }
+
+    async function generateCode() {
+        const randomString = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const newCode = "VIP-" + randomString;
+        
+        try {
+            await db.collection("activation_codes").add({
+                code: newCode,
+                used: false,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("නව කේතය සාර්ථකව සෑදුවා: " + newCode);
+            fetchCodes(); // refresh the list
+        } catch(error) {
+            console.error(error);
+            alert("කේතය සෑදීමේදී දෝෂයක්.");
+        }
+    }
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').then(reg => {
+                console.log('Service Worker registered successfully.', reg);
+            }).catch(err => {
+                console.error('Service Worker registration failed: ', err);
+            });
+        });
+    }
+</script>
 
 <style>
     @keyframes pulse {
