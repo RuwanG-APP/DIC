@@ -8,6 +8,10 @@
     }
 </script>    
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>දේශීය වෛද්‍ය ශබ්දකෝෂය - Ruwan Gamaralalage</title>
@@ -138,7 +142,10 @@ body {
         <p id="wordCountDisplay" ondblclick="promptAdminLogin()" style="cursor: default;" title="Double click to Admin Login">මුළු වචන සංඛ්‍යාව: <span id="wordCount">0</span></p>
     </div>
 
-    <input type="text" id="searchInput" placeholder="මෙහි සොයන්න..." onkeyup="initSearch()" class="search-box">
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <input type="text" id="searchInput" placeholder="මෙහි සොයන්න..." onkeyup="initSearch()" class="search-box" style="margin-bottom: 0; flex: 1;">
+        <button id="micBtn" onclick="startVoiceSearch()" style="background: var(--primary-green); color: white; border: none; width: 60px; border-radius: 8px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.3s;" title="කටහඬින් සොයන්න">🎙️</button>
+    </div>
     
     <div class="category-filter">
         <button class="cat-btn active" onclick="filterByCategory('all', this)">සියල්ල</button>
@@ -208,6 +215,11 @@ body {
         <div style="margin-top: 15px;">
             <label style="font-weight: bold; color: var(--primary-green);">විද්‍යාත්මක නාමය:</label>
             <input type="text" id="editScientificInput" class="search-box" style="margin-top: 5px; padding: 10px;">
+        </div>
+        
+        <div style="margin-top: 15px;">
+            <label style="font-weight: bold; color: var(--primary-green);">සිංග්ලිෂ් (Singlish):</label>
+            <input type="text" id="editSinglishInput" class="search-box" style="margin-top: 5px; padding: 10px;" placeholder="Optional (Auto-generated if empty)">
         </div>
         
         <div style="margin-top: 15px;">
@@ -296,14 +308,78 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
         });
     }
 
+    function sinhalaToSinglish(text) {
+        if (!text) return "";
+        const map = {
+            'අ': 'a', 'ආ': 'aa', 'ඇ': 'ae', 'ඈ': 'aee', 'ඉ': 'i', 'ඊ': 'ii', 'උ': 'u', 'ඌ': 'uu',
+            'එ': 'e', 'ඒ': 'ee', 'ඔ': 'o', 'ඕ': 'oo', 'ඖ': 'au', 'ඓ': 'ai',
+            'ක': 'k', 'ඛ': 'k', 'ග': 'g', 'ඝ': 'g', 'ඞ': 'ng', 'ඟ': 'ng',
+            'ච': 'ch', 'ඡ': 'ch', 'ජ': 'j', 'ඣ': 'j', 'ඥ': 'gn', 'ඤ': 'kn',
+            'ට': 't', 'ඨ': 't', 'ඩ': 'd', 'ඪ': 'd', 'ණ': 'n', 'ඬ': 'nd',
+            'ත': 'th', 'ථ': 'th', 'ද': 'd', 'ධ': 'd', 'න': 'n', 'ඳ': 'nd',
+            'ප': 'p', 'ඵ': 'p', 'බ': 'b', 'භ': 'b', 'ම': 'm', 'ඹ': 'mb',
+            'ය': 'y', 'ර': 'r', 'ල': 'l', 'ව': 'w', 'ශ': 'sh', 'ෂ': 'sh',
+            'ස': 's', 'හ': 'h', 'ළ': 'l', 'ෆ': 'f',
+            '්': '', 'ා': 'aa', 'ැ': 'ae', 'ෑ': 'aee', 'ි': 'i', 'ී': 'ii',
+            'ු': 'u', 'ූ': 'uu', 'ෙ': 'e', 'ේ': 'ee', 'ෛ': 'ai', 'ො': 'o',
+            'ෝ': 'oo', 'ෞ': 'au', 'ෘ': 'ru', 'ෲ': 'ruu', 'ෟ': 'lu', 'ෳ': 'luu',
+            'ං': 'ng', 'ඃ': 'h'
+        };
+        
+        let result = "";
+        let chars = text.split('');
+        for(let i=0; i<chars.length; i++){
+            let c = chars[i];
+            if(map[c] !== undefined) {
+                let en = map[c];
+                if(c.charCodeAt(0) >= 3482 && c.charCodeAt(0) <= 3526) {
+                    let next = chars[i+1];
+                    if(next) {
+                        let nextCode = next.charCodeAt(0);
+                        if(nextCode < 3530 || nextCode > 3571) { en += 'a'; }
+                    } else {
+                        en += 'a';
+                    }
+                }
+                result += en;
+            } else { result += c; }
+        }
+        return result;
+    }
+
     function initSearch(isIndexSearch = false) {
         let input = document.getElementById('searchInput').value.trim().toLowerCase();
         let resultDiv = document.getElementById('results');
         if (input.length < 1) { resultDiv.innerHTML = ""; return; }
 
+        // Freemium View Counter Logic
+        let isSubscribed = localStorage.getItem("isSubscribed") === "true";
+        if (!isAdmin && !isSubscribed) {
+            let count = parseInt(localStorage.getItem("searchCount") || "0");
+            if (count >= 20) {
+                document.getElementById('paywallModal').style.display = "block";
+                return;
+            }
+            localStorage.setItem("searchCount", count + 1);
+        }
+
+        let isEnglishInput = /^[a-zA-Z\s]+$/.test(input);
+
         let filtered = masterData.filter(item => {
             const categoryMatch = (currentCategory === 'all' || item.category === currentCategory);
-            let wordMatch = item.word.toLowerCase().startsWith(input);
+            let wordMatch = false;
+            
+            if (isEnglishInput) {
+                if (item.singlish && item.singlish.toLowerCase().startsWith(input)) {
+                    wordMatch = true;
+                } else {
+                    let autoSinglish = sinhalaToSinglish(item.word).toLowerCase();
+                    wordMatch = autoSinglish.startsWith(input) || autoSinglish.includes(input);
+                }
+            } else {
+                wordMatch = item.word.toLowerCase().startsWith(input) || item.word.toLowerCase().includes(input);
+            }
+            
             return categoryMatch && wordMatch;
         });
 
@@ -371,6 +447,7 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
         document.getElementById('editWordInput').value = item.word;
         document.getElementById('editMeaningInput').value = item.meaning;
         document.getElementById('editScientificInput').value = item.scientific || "";
+        document.getElementById('editSinglishInput').value = item.singlish || "";
         document.getElementById('editImageInput').value = "";
         
         let preview = document.getElementById('imagePreview');
@@ -402,6 +479,7 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
         let newMeaning = document.getElementById('editMeaningInput').value.trim();
         let newCategory = document.getElementById('editCategoryInput').value;
         let newScientific = document.getElementById('editScientificInput').value.trim();
+        let newSinglish = document.getElementById('editSinglishInput').value.trim();
         let imageInput = document.getElementById('editImageInput');
         
         if (newWord === "" || newMeaning === "") {
@@ -435,7 +513,7 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        sendUpdateRequest(originalWord, newWord, newMeaning, newCategory, newScientific, data.url, btn);
+                        sendUpdateRequest(originalWord, newWord, newMeaning, newCategory, newScientific, newSinglish, data.url, btn);
                     } else {
                         alert("Image Upload Error: " + data.message);
                         btn.innerText = "Save Changes"; btn.disabled = false;
@@ -449,15 +527,15 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
             reader.readAsDataURL(file);
         } else {
             let existingImage = (currentEditItemIndex !== -1 && masterData[currentEditItemIndex].image) ? masterData[currentEditItemIndex].image : "";
-            sendUpdateRequest(originalWord, newWord, newMeaning, newCategory, newScientific, existingImage, btn);
+            sendUpdateRequest(originalWord, newWord, newMeaning, newCategory, newScientific, newSinglish, existingImage, btn);
         }
     }
 
-    function sendUpdateRequest(orig, word, mean, cat, sci, img, btn) {
+    function sendUpdateRequest(orig, word, mean, cat, sci, singlish, img, btn) {
         fetch('/update', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ originalWord: orig, newWord: word, newMeaning: mean, newCategory: cat, newScientific: sci, newImage: img })
+            body: JSON.stringify({ originalWord: orig, newWord: word, newMeaning: mean, newCategory: cat, newScientific: sci, newSinglish: singlish, newImage: img })
         })
         .then(response => response.json())
         .then(data => {
@@ -470,6 +548,7 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
                     masterData[currentEditItemIndex].meaning = mean;
                     masterData[currentEditItemIndex].category = cat;
                     masterData[currentEditItemIndex].scientific = sci;
+                    masterData[currentEditItemIndex].singlish = singlish;
                     if (img) masterData[currentEditItemIndex].image = img;
                 }
                 closeEditModal();
@@ -560,6 +639,111 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
     }
 
     function closeModal() { document.getElementById('infoModal').style.display = "none"; }
+
+    // Voice Search Feature
+    function startVoiceSearch() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("ඔබගේ බ්‍රවුසරය Voice Search සඳහා සහය නොදක්වයි. කරුණාකර Google Chrome භාවිතා කරන්න.");
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'si-LK';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        const micBtn = document.getElementById('micBtn');
+        const searchInput = document.getElementById('searchInput');
+
+        recognition.onstart = function() {
+            micBtn.style.background = "#e74c3c"; // Red to show listening
+            micBtn.style.animation = "pulse 1.5s infinite";
+            searchInput.placeholder = "කථා කරන්න...";
+        };
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            searchInput.value = transcript;
+            initSearch();
+        };
+
+        recognition.onerror = function(event) {
+            console.error("Speech recognition error", event.error);
+        };
+
+        recognition.onend = function() {
+            micBtn.style.background = "var(--primary-green)";
+            micBtn.style.animation = "";
+            searchInput.placeholder = "මෙහි සොයන්න...";
+        };
+
+        recognition.start();
+    }
+    
+    // --- Firebase Initialization for Paywall ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyA2cI6JJez6ELlW8-ZmUHgmkrU1ETkkM0E",
+      authDomain: "veda-dictionay-app.firebaseapp.com",
+      projectId: "veda-dictionay-app",
+      storageBucket: "veda-dictionay-app.firebasestorage.app",
+      messagingSenderId: "969106193996",
+      appId: "1:969106193996:web:ea926c18a476aa000fbee9"
+    };
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    async function submitReceipt() {
+        let name = document.getElementById('pwName').value.trim();
+        
+        if(!name) {
+            alert("කරුණාකර ඔබගේ නම ඇතුළත් කරන්න.");
+            return;
+        }
+        
+        let myWhatsAppNumber = "94760829235"; 
+        let message = `ආයුබෝවන්! මම ${name}. මම දේශීය වෙද්‍ය ශබ්දකෝෂයේ දායකත්වය ලබාගැනීමට අදාළ රිසිට් පත මේ සමඟ එවනවා. කරුණාකර මට සක්‍රිය කිරීමේ කේතය (Subscription Code) ලබා දෙන්න.`;
+        let whatsappUrl = `https://wa.me/${myWhatsAppNumber}?text=${encodeURIComponent(message)}`;
+        
+        alert("ඔබව දැන් WhatsApp වෙත යොමු කරනු ඇත. කරුණාකර ඔබගේ රිසිට් පතෙහි ඡායාරූපය එහි Attach කර යවන්න.");
+        window.open(whatsappUrl, '_blank');
+    }
 </script>
+
+<div id="paywallModal" class="modal" style="display:none; background-color: rgba(0,0,0,0.9); z-index: 9999;">
+    <div class="modal-content" style="max-width: 500px; text-align: left; padding: 30px;">
+        <h2 style="color: #e74c3c; text-align: center;">සීමාව ඉක්මවා ඇත!</h2>
+        <p style="text-align: center; font-size: 16px;">ඔබගේ නොමිලේ ලබා දී තිබූ සෙවුම් වාර 20 සම්පූර්ණ වී ඇත. ශබ්දකෝෂය දිගටම භාවිතා කිරීමට කරුණාකර දායකත්වය (Subscription) ලබාගන්න.</p>
+        
+        <div style="background: #f1f8e9; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #c5e1a5;">
+            <p style="margin: 0; font-weight: bold; color: var(--primary-green);">බැංකු ගිණුම් විස්තර:</p>
+            <p style="margin: 5px 0;">Bank: <strong>BOC</strong></p>
+            <p style="margin: 5px 0;">Acc No: <strong>123456789</strong></p>
+            <p style="margin: 5px 0;">Name: <strong>Ruwan Gamaralalage</strong></p>
+            <p style="margin: 5px 0;">Amount: <strong>Rs. 1000 /=</strong> (වසරක් සඳහා)</p>
+        </div>
+
+        <div id="pwForm">
+            <input type="text" id="pwName" class="search-box" style="margin-bottom: 15px; padding: 10px;" placeholder="ඔබගේ නම මෙහි ඇතුළත් කරන්න">
+            
+            <button id="pwSubmitBtn" onclick="submitReceipt()" style="background: #25D366; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer;">WhatsApp හරහා රිසිට් පත යවන්න</button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.html" style="color: #555; text-decoration: underline;">කේතය ලැබුණි නම්, මුල් පිටුවට ගොස් ඇතුළත් කරන්න</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); box-shadow: 0 0 10px #e74c3c; }
+        100% { transform: scale(1); }
+    }
+</style>
 </body>
 </html>

@@ -124,7 +124,7 @@ const server = http.createServer((req, res) => {
         req.on('end', () => {
             try {
                 const data = JSON.parse(body);
-                const { originalWord, newWord, newMeaning, newCategory, newScientific, newImage } = data;
+                const { originalWord, newWord, newMeaning, newCategory, newScientific, newImage, newSinglish } = data;
                 
                 let found = false;
                 // data.js is the main one, data_*.js are the extras
@@ -185,6 +185,17 @@ const server = http.createServer((req, res) => {
                                 } else if (newImage !== "") {
                                     let lastBrace = updated.lastIndexOf('}');
                                     updated = updated.substring(0, lastBrace) + `, "image": ${JSON.stringify(newImage)} ` + updated.substring(lastBrace);
+                                }
+                            }
+                            
+                            // Update singlish
+                            const singlishRegex = /(['"]?singlish['"]?\s*:\s*)(["'])(?:(?=(\\?))\3.)*?\2/;
+                            if (newSinglish !== undefined) {
+                                if (updated.match(singlishRegex)) {
+                                    updated = updated.replace(singlishRegex, `$1${JSON.stringify(newSinglish)}`);
+                                } else if (newSinglish !== "") {
+                                    let lastBrace = updated.lastIndexOf('}');
+                                    updated = updated.substring(0, lastBrace) + `, "singlish": ${JSON.stringify(newSinglish)} ` + updated.substring(lastBrace);
                                 }
                             }
                             
