@@ -419,7 +419,12 @@ masterData = [...data1, ...data2, ...data3, ...data4, ...data5, ...data6, ...dat
         initSearch();
     }
 
-    function exitApp() { if (confirm("ඔබට මෙම ශබ්දකෝෂයෙන් පිටවීමට අවශ්‍යද?")) { window.close(); window.location.href = "about:blank"; } }
+    function exitApp() { 
+        if (confirm("ඔබට මෙම ශබ්දකෝෂයෙන් පිටවීමට (Logout) අවශ්‍යද?")) { 
+            localStorage.clear(); 
+            window.location.href = "index.html"; 
+        } 
+    }
     function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
     function changeFontSize(delta) { 
         const root = document.querySelector(':root');
