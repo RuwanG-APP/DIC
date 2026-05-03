@@ -8,6 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>
+        // CRITICAL: Auto-redirect if already unlocked
+        if (localStorage.getItem("isUnlocked") === "true") {
+            window.location.href = "dictionary.html";
+        }
+    </script>
     <style>
         body {
             margin: 0;
@@ -99,6 +105,11 @@
 </head>
 <body>
 
+<!-- Offline Indicator -->
+<div id="offline-bar" style="display:none; background: #c62828; color: white; text-align: center; padding: 10px; position: fixed; top: 0; width: 100%; z-index: 1000; font-weight: bold;">
+    සම්බන්ධතාවය බිඳී ඇත - Offline Mode (සක්‍රිය කර ඇති කේත පරීක්ෂා කළ නොහැක)
+</div>
+
 <div class="login-container">
     <div class="logo-text">දේශීය වෙද්‍ය ශබ්දකෝෂය</div>
     <div class="sub-text">වචන 22,500+ කින් සමන්විත ප්‍රථම ඩිජිටල් සංස්කරණය</div>
@@ -179,6 +190,25 @@
             btn.disabled = false;
         }
     }
+
+    // Connectivity check
+    function updateOnlineStatus() {
+        const offlineBar = document.getElementById('offline-bar');
+        const loginBtn = document.getElementById('loginBtn');
+        if (navigator.onLine) {
+            offlineBar.style.display = 'none';
+            loginBtn.disabled = false;
+            loginBtn.style.opacity = '1';
+        } else {
+            offlineBar.style.display = 'block';
+            loginBtn.disabled = true;
+            loginBtn.style.opacity = '0.5';
+            loginBtn.title = "කේත පරීක්ෂා කිරීමට අන්තර්ජාලය අවශ්‍යයි";
+        }
+    }
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    updateOnlineStatus();
 
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
