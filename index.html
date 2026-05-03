@@ -123,7 +123,9 @@
     <div class="step-box">
         <h3>2. දායකත්වය ලබාගෙන ඇතුල් වන්න</h3>
         <p style="font-size: 15px; color: #555;">ඔබට ලැබුණු සක්‍රිය කිරීමේ කේතය (Subscription Code) ඇතුළත් කරන්න.</p>
-        <input type="text" id="passcode" placeholder="කේතය මෙහි ඇතුල්කරන්න">
+        <input type="text" id="userName" placeholder="ඔබගේ නම">
+        <input type="tel" id="userPhone" placeholder="දුරකථන අංකය">
+        <input type="text" id="passcode" placeholder="කේතය (Subscription Code)">
         <button id="loginBtn" onclick="unlockApp()">ශබ්දකෝෂය විවෘත කරන්න</button>
         <div id="error-msg">කේතය වැරදියි හෝ දැනටමත් පාවිච්චි කර ඇත!</div>
     </div>
@@ -152,12 +154,14 @@
     }
 
     async function unlockApp() {
+        let name = document.getElementById('userName').value.trim();
+        let phone = document.getElementById('userPhone').value.trim();
         let code = document.getElementById('passcode').value.trim();
         let btn = document.getElementById('loginBtn');
         let errorMsg = document.getElementById('error-msg');
         
-        if (!code) {
-            alert("කරුණාකර කේතයක් ඇතුළත් කරන්න.");
+        if (!name || !phone || !code) {
+            alert("කරුණාකර සියලු විස්තර (නම, දුරකථන අංකය සහ කේතය) ඇතුළත් කරන්න.");
             return;
         }
 
@@ -177,6 +181,14 @@
                 // Code is valid! Mark as used.
                 const docId = snapshot.docs[0].id;
                 await codesRef.doc(docId).update({ used: true, usedAt: new Date() });
+                
+                // Save user details to Firestore
+                await db.collection("users").add({
+                    name: name,
+                    phone: phone,
+                    code: code,
+                    activatedAt: new Date()
+                });
                 
                 // Save subscription state
                 localStorage.setItem("isSubscribed", "true");
