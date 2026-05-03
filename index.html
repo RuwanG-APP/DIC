@@ -171,18 +171,38 @@
 
         try {
             const codesRef = db.collection("activation_codes");
-            const snapshot = await codesRef.where("code", "==", code).where("used", "==", false).get();
+            const snapshot = await codesRef.where("code", "==", code).get();
             
             if (snapshot.empty) {
+                errorMsg.innerText = "කේතය වැරදියි!";
                 errorMsg.style.display = "block";
                 btn.innerText = "ශබ්දකෝෂය විවෘත කරන්න";
                 btn.disabled = false;
-            } else {
-                // Code is valid! Mark as used.
-                const docId = snapshot.docs[0].id;
-                await codesRef.doc(docId).update({ used: true, usedAt: new Date() });
+                return;
+            }
+
+            const codeDoc = snapshot.docs[0].data();
+            const codeId = snapshot.docs[0].id;
+
+            if (codeDoc.used) {
+                // Check if this user is re-activating
+                const userSnapshot = await db.collection("users").where("code", "==", code).where("phone", "==", phone).get();
                 
-                // Save user details to Firestore
+                if (userSnapshot.empty) {
+                    errorMsg.innerText = "මෙම කේතය දැනටමත් වෙනත් අංකයක් සඳහා පාවිච්චි කර ඇත!";
+                    errorMsg.style.display = "block";
+                    btn.innerText = "ශබ්දකෝෂය විවෘත කරන්න";
+                    btn.disabled = false;
+                } else {
+                    // Re-activation successful!
+                    localStorage.setItem("isSubscribed", "true");
+                    localStorage.setItem("isUnlocked", "true");
+                    window.location.href = "dictionary.html";
+                }
+            } else {
+                // Fresh activation!
+                await codesRef.doc(codeId).update({ used: true, usedAt: new Date() });
+                
                 await db.collection("users").add({
                     name: name,
                     phone: phone,
@@ -190,7 +210,6 @@
                     activatedAt: new Date()
                 });
                 
-                // Save subscription state
                 localStorage.setItem("isSubscribed", "true");
                 localStorage.setItem("isUnlocked", "true");
                 window.location.href = "dictionary.html";
